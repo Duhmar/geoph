@@ -23,7 +23,7 @@
             font-family: var(--body-font);
             margin: 0;
             font-weight: 400;
-            transition: color 0.5s ease;
+            transition: color 0.3s ease; /* Snappy text color transition */
         }
 
         @keyframes rainbow-flow {
@@ -73,7 +73,7 @@
             outline: none;
         }
 
-        /* NEW: FROSTED GLASS THEME TOGGLE ORB */
+        /* FROSTED GLASS THEME TOGGLE ORB */
         .theme-toggle-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -90,28 +90,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.1);
         }
         .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); box-shadow: 0 5px 20px rgba(255,235,59,0.4); }
-
-        /* ANIMATION OVERLAY FOR SUN/MOON EXPANSION */
-        .theme-transition-overlay {
-            position: fixed;
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 999; /* Below navbar, above content */
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
-            opacity: 0;
-        }
-        .theme-transition-overlay.expand-light {
-            background: radial-gradient(circle, #ffeb3b 0%, rgba(255,235,59,0.8) 50%, rgba(255,235,59,0) 100%);
-            transform: translate(-50%, -50%) scale(400);
-            opacity: 1;
-        }
-        .theme-transition-overlay.expand-dark {
-            background: radial-gradient(circle, #0f172a 0%, rgba(15,23,42,0.9) 50%, rgba(15,23,42,0) 100%);
-            transform: translate(-50%, -50%) scale(400);
-            opacity: 1;
-        }
 
         .hamburger-btn { background: transparent; border: none; color: var(--gold-effect); font-size: 2rem; line-height: 1; padding: 0 10px; cursor: pointer; transition: 0.3s; }
         .hamburger-btn:hover { text-shadow: 0 0 20px rgba(255, 235, 59, 0.9); transform: scale(1.1); }
@@ -183,9 +161,6 @@
 <body>
     <div id="gold-loader-overlay"><div class="gold-spinner"></div></div>
 
-    <!-- The invisible DIV that handles the sun/moon burst animation -->
-    <div id="theme-transition-overlay" class="theme-transition-overlay"></div>
-
     <div class="container-fluid px-5 px-md-3">
         <nav class="navbar navbar-container d-flex w-100 align-items-center">
             
@@ -207,7 +182,7 @@
             <div class="d-flex justify-content-end align-items-center" style="flex: 1; position: relative;">
                 
                 <!-- GLASS THEME BUTTON -->
-                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleDarkMode(event)">🌙</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleDarkMode()">🌙</button>
 
                 <button id="customHamburgerBtn" class="hamburger-btn" onclick="toggleMenu()">☰</button>
                 
@@ -354,41 +329,17 @@
             if (!menu.contains(event.target) && event.target !== btn) { menu.style.display = 'none'; }
         });
 
-        // --- NEW SUN/MOON EXPLOSION ANIMATION ---
-        function toggleDarkMode(event) {
-            const isDark = document.body.classList.contains('dark-mode');
-            const overlay = document.getElementById('theme-transition-overlay');
+        // --- REVERTED: SIMPLE DARK MODE TOGGLE ---
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
             const btn = document.getElementById('themeToggleBtn');
             
-            // Set explosion center point to where the user clicked!
-            if (event) {
-                overlay.style.left = event.clientX + 'px';
-                overlay.style.top = event.clientY + 'px';
-            }
-
-            // Remove old classes to reset animation
-            overlay.classList.remove('expand-light', 'expand-dark');
-            void overlay.offsetWidth; // Force CSS reflow trick
-
-            if (isDark) {
-                // EXPLODE LIGHT (Sun)
-                overlay.classList.add('expand-light');
-                setTimeout(() => {
-                    document.body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                    if (btn) btn.textContent = '🌙';
-                    // Reset overlay after fade
-                    setTimeout(() => { overlay.classList.remove('expand-light'); }, 500);
-                }, 300); // Change happens halfway through animation
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                if (btn) btn.textContent = '☀️';
             } else {
-                // ABSORB LIGHT (Moon)
-                overlay.classList.add('expand-dark');
-                setTimeout(() => {
-                    document.body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                    if (btn) btn.textContent = '☀️';
-                    setTimeout(() => { overlay.classList.remove('expand-dark'); }, 500);
-                }, 300);
+                localStorage.setItem('theme', 'light');
+                if (btn) btn.textContent = '🌙';
             }
         }
 
@@ -402,7 +353,7 @@
             }
         });
 
-        // --- FRONTEND Llama 3 AI BYPASS (Fixes Server Block!) ---
+        // --- FRONTEND Llama 3 AI BYPASS (NOW ACTIVE!) ---
         function toggleChat() {
             const panel = document.getElementById('chatPanel');
             const btn = document.getElementById('chatToggleBtn');
@@ -422,8 +373,8 @@
             if (messageText === '') return;
             const chatMessages = document.getElementById('chatMessages');
 
-            // 1. Paste your GROQ API Key exactly inside these quotes!
-            const GROQ_API_KEY = "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";
+            // 1. Using your actual, secure Groq API key!
+            const GROQ_API_KEY = "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";
 
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message msg-user';
@@ -463,7 +414,6 @@
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message msg-bot';
                 
-                // Extract the AI's reply from Groq's data structure
                 botMsgDiv.textContent = data.choices[0].message.content;
                 chatMessages.appendChild(botMsgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -472,7 +422,7 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Oops! Did you remember to paste your GROQ API Key in the code?";
+                errorDiv.textContent = "Oops! Could not connect to the AI brain. Please try again later.";
                 chatMessages.appendChild(errorDiv);
             });
         }
