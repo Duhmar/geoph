@@ -87,7 +87,7 @@
             <label class="custom-label">Spot Name / Title</label>
             {{ form.title }}
             {% if form.title.errors %}
-                <div class="text-danger small mt-1 fw-bold">{{ form.title.errors }}</div>
+                <div class="text-danger small mt-1">{{ form.title.errors }}</div>
             {% endif %}
         </div>
 
@@ -95,7 +95,7 @@
             <label class="custom-label">Your Experience</label>
             {{ form.description }}
             {% if form.description.errors %}
-                <div class="text-danger small mt-1 fw-bold">{{ form.description.errors }}</div>
+                <div class="text-danger small mt-1">{{ form.description.errors }}</div>
             {% endif %}
         </div>
 
@@ -106,7 +106,7 @@
                 <em>Tip: You can highlight and select multiple files at once!</em>
             </div>
             {% if form.extra_media.errors %}
-                <div class="text-danger small mt-1 fw-bold">{{ form.extra_media.errors }}</div>
+                <div class="text-danger small mt-1">{{ form.extra_media.errors }}</div>
             {% endif %}
         </div>
 

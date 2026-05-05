@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dinagat Islands Tourist spots</title>
-    <!-- Original Poppins Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- LEAFLET CSS FOR FREE MAP -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
     <style>
@@ -75,6 +73,22 @@
             outline: none;
         }
 
+        /* NEW: GLASS MOON THEME TOGGLE */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: var(--gold-effect);
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.25); transform: scale(1.1); }
+
         /* HAMBURGER BUTTON */
         .hamburger-btn {
             background: transparent;
@@ -96,20 +110,20 @@
             position: absolute;
             top: 60px;
             right: 0;
-            background: rgba(30, 30, 40, 0.15); /* Very light, lets droplets pop */
+            background: rgba(30, 30, 40, 0.15); 
             backdrop-filter: blur(40px) saturate(200%);
             -webkit-backdrop-filter: blur(40px) saturate(200%);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-top: 1px solid rgba(255, 255, 255, 0.5);
             border-left: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 24px;
-            padding: 12px; /* Padding creates space around the droplets */
+            padding: 12px; 
             min-width: 200px;
             z-index: 10500; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
             display: none;
             flex-direction: column;
-            gap: 8px; /* The small gap between droplets! */
+            gap: 8px; 
         }
 
         /* INDIVIDUAL DROPLET/PILL STYLING */
@@ -118,10 +132,10 @@
             padding: 12px 20px;
             text-decoration: none;
             display: block;
-            background: rgba(255, 255, 255, 0.1); /* Frosted droplet background */
+            background: rgba(255, 255, 255, 0.1); 
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 50px; /* Perfect curved oval/pill shape */
-            text-align: center; /* Centered text */
+            border-radius: 50px; 
+            text-align: center; 
             width: 100%;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-family: var(--body-font);
@@ -129,35 +143,58 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        body.dark-mode {
-            background: linear-gradient(-45deg, #0f172a, #1e1e2f, #0f3460, #16213e);
-            color: #e2e8f0;
-        }
-        .dark-mode .glass-panel-widget, .dark-mode .glass-dropdown, .dark-mode .navbar-container {
-            background: rgba(10, 10, 15, 0.4);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .dark-mode .hotel-card { background: rgba(0,0,0,0.5); }
-
-        /* --- MOBILE UI FIXES --- */
-        @media (max-width: 768px) {
-            .centered-panel, .chat-panel {
-                width: 90vw !important; /* Shrinks to fit mobile screens */
-                max-width: 400px;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-            }
-            .magical-chat-widget { bottom: 15px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; }
-            .widget-toggle-btn { margin: 0 auto; }
-        }
-
         .glass-dropdown a:hover, .glass-dropdown button:hover {
             background: var(--gold-effect); 
             color: black !important;
             font-weight: 600;
-            transform: scale(1.05); /* Slight pop out effect */
+            transform: scale(1.05); 
             box-shadow: 0 5px 15px rgba(255, 235, 59, 0.4);
             border-color: var(--gold-effect);
+        }
+
+        /* --- PERFECTED DARK MODE --- */
+        body.dark-mode {
+            background: linear-gradient(-45deg, #0f172a, #1e1e2f, #0f3460, #16213e);
+            color: #ffffff;
+        }
+        .dark-mode .glass-panel-widget, .dark-mode .glass-dropdown, .dark-mode .navbar-container {
+            background: rgba(10, 10, 15, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode .hotel-card { background: rgba(0,0,0,0.6); }
+        .dark-mode .theme-toggle-btn { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
+        .dark-mode input, .dark-mode textarea { color: white !important; background: rgba(0,0,0,0.4) !important; }
+
+        /* --- PERFECTED MOBILE UI FIXES --- */
+        @media (max-width: 768px) {
+            .navbar-container { padding: 10px 15px; }
+            .search-wrapper { max-width: 160px; } /* Prevent search bar from taking over */
+            
+            /* Center the widgets so they don't leak off screen */
+            .centered-panel {
+                width: 90vw !important; 
+                max-width: 400px;
+                left: 50% !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+            }
+            .chat-panel {
+                position: fixed !important;
+                width: 92vw !important;
+                height: 65vh !important;
+                bottom: 85px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+            .magical-chat-widget { 
+                bottom: 15px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                width: 100%; 
+                text-align: center; 
+            }
+            .widget-toggle-btn { margin: 0 auto; }
+            .glass-dropdown { right: -10px; width: 220px; } /* Keep menu readable */
         }
 
         #gold-loader-overlay {
@@ -200,24 +237,22 @@
             </div>
 
             <div class="d-flex justify-content-end align-items-center" style="flex: 1; position: relative;">
-                <!-- CUSTOM JAVASCRIPT DROPDOWN MENU -->
+                
+                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleDarkMode()">🌙</button>
+
                 <button id="customHamburgerBtn" class="hamburger-btn" onclick="toggleMenu()">☰</button>
                 
                 <div id="customDropdown" class="glass-dropdown">
-                    <!-- Notice how there are no <hr> lines anymore, just distinct droplets! -->
                     <a href="{% url 'home' %}">Home</a>
-                    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
                     <a href="#" onclick="toggleMap(); toggleMenu(); return false;">Map</a>
                     
                     {% if user.is_authenticated %}
-                        <!-- ADDED ANALYTICS LINK HERE -->
                         <a href="{% url 'analytics_dashboard' %}">Analytics</a>
-                        <a href="{% url 'report_list' %}">Sightings</a>
-                        <a href="#" onclick="toggleHotel(); toggleMenu(); return false;">Hotel</a>
+                        <a href="{% url 'report_list' %}">Uploads</a> <a href="#" onclick="toggleHotel(); toggleMenu(); return false;">Hotel</a>
                         <a href="{% url 'profile' %}">Profile</a>
                         <form method="POST" action="{% url 'logout' %}" class="m-0 d-flex w-100">
                             {% csrf_token %}
-                            <button type="submit" class="text-danger fw-bold w-100 mt-2" style="background: rgba(255,0,0,0.1); border-color: rgba(255,0,0,0.3);">Exit</button>
+                            <button type="submit" class="fw-bold w-100 mt-2" style="background: rgba(255,0,0,0.15); border-color: rgba(255,0,0,0.3); color: #ff5252 !important;">Log out</button>
                         </form>
                     {% else %}
                         <a href="{% url 'login' %}">Login</a>
@@ -232,9 +267,6 @@
         {% block content %}{% endblock %}
     </div>
 
-    <!-- ========================================== -->
-    <!-- WIDGETS (LIQUID GLASS PANELS) STYLES       -->
-    <!-- ========================================== -->
     <style>
         /* TRUE LIQUID GLASS FOR ALL PANELS */
         .glass-panel-widget {
@@ -301,7 +333,7 @@
         .msg-user { background: var(--gold-effect); color: black; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(255, 235, 59, 0.3); }
         
         .chat-input-area { padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white; font-size: 0.85rem; outline: none; transition: 0.3s; }
+        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white !important; font-size: 0.85rem; outline: none; transition: 0.3s; }
         .chat-input:focus { border-color: var(--gold-effect); background: rgba(0,0,0,0.3); }
         .chat-send-btn { background: var(--gold-effect); border: none; border-radius: 50%; width: 38px; height: 38px; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);}
         .widget-toggle-btn {
@@ -345,7 +377,6 @@
         <button class="widget-toggle-btn" id="chatToggleBtn" onclick="toggleChat()">Chat</button>
     </div>
 
-    <!-- HOTEL RESERVATION PANEL (Centered Liquid Glass) -->
     <div class="glass-panel-widget centered-panel" id="hotelPanel" style="display: none;">
         <div class="widget-header">
             <h4 class="widget-title">Island Accommodations</h4>
@@ -374,7 +405,6 @@
         </div>
     </div>
 
-    <!-- FULL SCREEN LEAFLET MAP PANEL -->
     <div class="glass-panel-widget fullscreen-panel" id="mapPanel" style="display: none;">
         <div class="widget-header">
             <h4 class="widget-title">Island Route Map</h4>
@@ -400,14 +430,27 @@
         </div>
     </div>
 
-    <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- LEAFLET JS SCRIPT -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <!-- WIDGET SCRIPTS -->
     <script>
+        // --- UNIVERSAL SECURE COOKIE READER ---
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         // --- CUSTOM HAMBURGER MENU LOGIC ---
         function toggleMenu() {
             const menu = document.getElementById('customDropdown');
@@ -445,7 +488,6 @@
             if (messageText === '') return;
             const chatMessages = document.getElementById('chatMessages');
 
-            // 1. Show the user's message
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message msg-user';
             userMsgDiv.textContent = messageText;
@@ -453,7 +495,6 @@
             inputField.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // 2. Show a temporary "typing..." indicator
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message msg-bot';
             typingDiv.id = 'typingIndicator';
@@ -461,18 +502,21 @@
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // 3. Send the message to your Django backend via fetch
+            // Updated fetch call with CSRF token and better error handling
             fetch('/api/chat/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
                 body: JSON.stringify({ 'message': messageText })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Network error');
+                return response.json();
+            })
             .then(data => {
-                // Remove the "Thinking..." indicator
                 document.getElementById('typingIndicator').remove();
-                
-                // Show the real AI response!
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message msg-bot';
                 botMsgDiv.textContent = data.reply;
@@ -483,7 +527,7 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Oops! Connection lost.";
+                errorDiv.textContent = "Oops! Connection blocked by free server firewall. Try running locally!";
                 chatMessages.appendChild(errorDiv);
             });
         }
@@ -511,7 +555,7 @@
                 return;
             }
 
-            const csrftoken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+            const csrftoken = getCookie('csrftoken');
 
             fetch(`/book/${hotelId}/`, {
                 method: 'POST',
@@ -568,18 +612,27 @@
             }
         }
 
+        // --- NEW DARK MODE LOGIC (Icon Updates Automatically) ---
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('themeToggleBtn');
+            
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
+                if (btn) btn.textContent = '☀️';
             } else {
                 localStorage.setItem('theme', 'light');
+                if (btn) btn.textContent = '🌙';
             }
         }
 
         window.addEventListener('load', function() {
+            const btn = document.getElementById('themeToggleBtn');
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark-mode');
+                if (btn) btn.textContent = '☀️';
+            } else {
+                if (btn) btn.textContent = '🌙';
             }
         });
 
@@ -613,7 +666,6 @@
         });
     </script>
 
-    <!-- ADDED: PWA Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {

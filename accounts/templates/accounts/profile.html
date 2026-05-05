@@ -73,14 +73,14 @@
                 <div class="profile-img mx-auto d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.5); font-size: 4rem;">👤</div>
             {% endif %}
             
-            <h2 class="fw-bold mb-0">{{ user.username }}</h2>
+            <h2 class=" mb-0">{{ user.username }}</h2>
             <p class="opacity-75 mb-4">{{ user.email }}</p>
 
             <a href="{% url 'edit_profile' %}" class="btn-gold w-100 mb-4">Edit Profile</a>
 
             <hr style="border-color: rgba(255,255,255,0.2);">
             
-            <h5 class="fw-bold text-start mt-4 mb-3">Activity Summary</h5>
+            <h5 class=" text-start mt-4 mb-3">Activity Summary</h5>
             <div class="d-flex gap-3">
                 <div class="stat-box">
                     <div class="stat-number">{{ total_uploads }}</div>
@@ -96,7 +96,7 @@
 
     <div class="col-lg-8">
         <div class="glass-panel">
-            <h3 class="fw-bold mb-4" style="color: #ffeb3b; text-shadow: 0 0 15px rgba(255,235,59,0.4);">Explorer Details</h3>
+            <h3 class=" mb-4" style="color: #ffeb3b; text-shadow: 0 0 15px rgba(255,235,59,0.4);">Profile Details</h3>
             
             <div class="row">
                 <div class="col-md-6">
@@ -126,7 +126,7 @@
                     <div class="detail-value">{{ user.profile.phone_number|default:'<span class="opacity-50">Not set</span>'|safe }}</div>
                 </div>
                 <div class="col-md-6">
-                    <div class="detail-label">Joined Dinagat</div>
+                    <div class="detail-label">Joined</div>
                     <div class="detail-value">{{ user.date_joined|date:"F Y" }}</div>
                 </div>
 
