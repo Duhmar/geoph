@@ -376,59 +376,127 @@
         function handleEnter(event) { if (event.key === 'Enter') sendMessage(); }
         
         function sendMessage() {
+
             const inputField = document.getElementById('chatInput');
+
             const messageText = inputField.value.trim();
+
             if (messageText === '') return;
+
             const chatMessages = document.getElementById('chatMessages');
 
-            // --- PASTE YOUR NEW GEMINI API KEY HERE ---
-            const GEMINI_API_KEY = "AIzaSyDAqxCwa9H7HorcAEt76i6_7oMO74A4PVQ"; 
-            // ------------------------------------------
+
+
+            // --- PASTE YOUR NEW OPENROUTER API KEY HERE ---
+
+            const OPENROUTER_API_KEY = "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"; 
+
+            // ----------------------------------------------
+
+
 
             const userMsgDiv = document.createElement('div');
+
             userMsgDiv.className = 'message msg-user';
+
             userMsgDiv.textContent = messageText;
+
             chatMessages.appendChild(userMsgDiv);
+
             inputField.value = '';
+
             chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
 
             const typingDiv = document.createElement('div');
+
             typingDiv.className = 'message msg-bot';
+
             typingDiv.id = 'typingIndicator';
+
             typingDiv.textContent = 'Thinking...';
+
             chatMessages.appendChild(typingDiv);
+
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Updated to use Google Gemini 1.5 Flash
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-            const prompt = `You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences. User asks: ${messageText}`;
 
-            fetch(url, {
+
+            fetch('https://openrouter.ai/api/v1/chat/completions', {
+
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ "contents": [{ "parts": [{"text": prompt}] }] })
+
+                headers: { 
+
+                    'Content-Type': 'application/json',
+
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+
+                    'HTTP-Referer': window.location.href, // Required by OpenRouter for free tier
+
+                    'X-Title': 'GeoPH' // Optional site name
+
+                },
+
+                body: JSON.stringify({
+
+                    // This explicitly uses the 100% free version of Llama 3
+
+                    "model": "meta-llama/llama-3.1-8b-instruct:free",
+
+                    "messages": [
+
+                        {"role": "system", "content": "You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences."},
+
+                        {"role": "user", "content": messageText}
+
+                    ]
+
+                })
+
             })
+
             .then(response => {
+
                 if (!response.ok) throw new Error('API Key missing or invalid!');
+
                 return response.json();
+
             })
+
             .then(data => {
+
                 document.getElementById('typingIndicator').remove();
+
                 const botMsgDiv = document.createElement('div');
+
                 botMsgDiv.className = 'message msg-bot';
+
                 
-                // Parse Gemini's specific response structure
-                botMsgDiv.textContent = data.candidates[0].content.parts[0].text;
+
+                botMsgDiv.textContent = data.choices[0].message.content;
+
                 chatMessages.appendChild(botMsgDiv);
+
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+
             })
+
             .catch(error => {
+
                 document.getElementById('typingIndicator').remove();
+
                 const errorDiv = document.createElement('div');
+
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Oops! Could not connect to the AI brain. Make sure your API key is correct and repository is private.";
+
+                errorDiv.textContent = "Oops! Could not connect to the AI brain. Make sure your API key is correct and your repository is private.";
+
                 chatMessages.appendChild(errorDiv);
+
             });
+
         }
 
         function getCookie(name) {
