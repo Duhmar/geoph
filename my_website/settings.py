@@ -1,16 +1,20 @@
 import os
 from pathlib import Path
+import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# LOAD THE .ENV FILE
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-# (If you had a different secret key here before, it is okay to use this one for local development)
 SECRET_KEY = 'django-insecure-replace-this-in-production'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False 
-ALLOWED_HOSTS = ['geodinagat.pythonanywhere.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['geodinagat.pythonanywhere.com', '127.0.0.1', 'localhost', '*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -20,11 +24,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts', # Your DENR app
+    'accounts', 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -33,13 +38,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# THE MISSING LINE THAT CAUSED THE ERROR:
 ROOT_URLCONF = 'my_website.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # This finds your home.html
+        'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -52,18 +56,16 @@ TEMPLATES = [
     },
 ]
 
-# Another core setting needed to run the server
 WSGI_APPLICATION = 'my_website.wsgi.application'
 
+# SAFER DATABASE CONFIGURATION
+# It tries to read from Supabase. If .env fails, it safely uses local SQLite so it won't crash.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dinagat_db',         
-        'USER': 'root',               
-        'PASSWORD': 'Group1!2!0!',  
-        'HOST': 'localhost',           
-        'PORT': '3306',              
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Static files (CSS, JavaScript, Images)
