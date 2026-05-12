@@ -16,6 +16,8 @@ SECRET_KEY = 'django-insecure-replace-this-in-production'
 DEBUG = True 
 ALLOWED_HOSTS = ['geodinagat.pythonanywhere.com', '127.0.0.1', 'localhost', '*']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
