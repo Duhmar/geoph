@@ -4,8 +4,14 @@ from PIL import Image
 from datetime import date
 
 class Report(models.Model):
+    REGION_CHOICES = [
+        ('Luzon', 'Luzon'),
+        ('Visayas', 'Visayas'),
+        ('Mindanao', 'Mindanao'),
+    ]
     title = models.CharField(max_length=200)
     description = models.TextField()
+    region = models.CharField(max_length=20, choices=REGION_CHOICES, default='Luzon')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_reports', blank=True)
@@ -34,7 +40,6 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        
         try:
             img = Image.open(self.image.path)
             if img.height > 300 or img.width > 300:
@@ -54,7 +59,6 @@ class Profile(models.Model):
 class Comment(models.Model):
     report = models.ForeignKey(Report, related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -84,43 +88,23 @@ class RoomBooking(models.Model):
     def __str__(self):
         return f"{self.user.username} booked {self.hotel.name}"
 
-
-# ==========================================
-# NEW GEODINAGAT MAPPING & TOURISM MODELS
-# ==========================================
-
-class Municipality(models.Model):
-    """
-    Parent table for the locations in Dinagat Islands 
-    (e.g., San Jose, Cagdianao, Basilisa, Loreto)
-    """
+class Province(models.Model):
     name = models.CharField(max_length=100, unique=True)
     
-    class Meta:
-        verbose_name_plural = "Municipalities"
-
     def __str__(self):
         return self.name
 
 class Accommodation(models.Model):
-    """
-    Table for Hotels, Homestays, Lodges, and Resorts with mapping coordinates.
-    """
     name = models.CharField(max_length=200)
-    municipality = models.ForeignKey(Municipality, on_delete=models.CASCADE, related_name='accommodations')
-    
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='accommodations')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    
     is_fully_booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.name} ({self.municipality.name})"
+        return f"{self.name} ({self.province.name})"
 
 class TouristSpot(models.Model):
-    """
-    Table for Beaches, Lagoons, Rock Formations, and Historical Sites.
-    """
     CATEGORY_CHOICES = [
         ('BEACH', 'Beach/Resort'),
         ('LAGOON', 'Lagoon/Pool'),
@@ -130,9 +114,8 @@ class TouristSpot(models.Model):
     ]
 
     name = models.CharField(max_length=200)
-    municipality = models.ForeignKey(Municipality, on_delete=models.CASCADE, related_name='tourist_spots', null=True, blank=True)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='tourist_spots', null=True, blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='BEACH')
-    
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
@@ -140,18 +123,14 @@ class TouristSpot(models.Model):
         return f"{self.name} - {self.get_category_display()}"
 
 class TransportationTerminal(models.Model):
-    """
-    Table for Ports and Habal-Habal Terminals for route planning.
-    """
     TERMINAL_TYPES = [
         ('PORT', 'Seaport'),
         ('HABAL_HABAL', 'Habal-Habal Terminal'),
     ]
     
     name = models.CharField(max_length=200)
-    municipality = models.ForeignKey(Municipality, on_delete=models.CASCADE, related_name='transport_terminals', null=True, blank=True)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='transport_terminals', null=True, blank=True)
     terminal_type = models.CharField(max_length=20, choices=TERMINAL_TYPES, default='PORT')
-    
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
