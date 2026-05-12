@@ -9,6 +9,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Count
 from django.http import JsonResponse
 import json
+import os
+import urllib.request
+import urllib.error
 
 def home(request):
     reports = Report.objects.all().order_by('-created_at')
@@ -230,3 +233,43 @@ def analytics_dashboard(request):
     }
     
     return render(request, 'reports/analytics.html', context)
+
+
+# ==========================================
+# SECURE AI CHATBOT BACKEND
+# ==========================================
+def chat_api(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '')
+            api_key = os.environ.get('OPENROUTER_API_KEY')
+
+            url = 'https://openrouter.ai/api/v1/chat/completions'
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {api_key}',
+                'HTTP-Referer': request.build_absolute_uri(),
+                'X-Title': 'GeoPH'
+            }
+            
+            # Using the 100% free Meta Llama 3 model
+            payload = {
+                "model": "meta-llama/llama-3.1-8b-instruct:free",
+                "messages": [
+                    {"role": "system", "content": "You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences."},
+                    {"role": "user", "content": user_message}
+                ]
+            }
+
+            req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
+            
+            with urllib.request.urlopen(req) as response:
+                response_data = json.loads(response.read().decode('utf-8'))
+                bot_message = response_data['choices'][0]['message']['content']
+                return JsonResponse({'response': bot_message})
+                
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+            
+    return JsonResponse({'error': 'Invalid request'}, status=400)
