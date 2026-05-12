@@ -119,7 +119,7 @@
 <div class="nature-row mb-5">
     {% for report in reports %}
     <div>
-        <div class="glass-card">
+        <div class="glass-card spot-card" data-region="{{ report.region|default:'Luzon' }}">
             
             {% if user == report.author or user.is_staff %}
             <div class="owner-controls">
@@ -248,115 +248,11 @@
     {% endfor %}
 </div>
 
-<div class="mb-5">
-
-    <h2 class="text-center mb-4"
-        style="color: #ffeb3b;
-        text-shadow: 0 0 20px rgba(255,235,59,0.5);">
-        Top 10 Tourist Spots in the Philippines
-    </h2>
-
-    <div class="nature-row" id="top-spots-container">
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#1 El Nido, Palawan</h4>
-            <p class="small opacity-75">
-                Famous for crystal-clear lagoons, limestone cliffs, and island hopping adventures.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Visayas">
-            <img src="https://images.unsplash.com/photo-1583391733956-6c77a4d04e98?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#2 Boracay</h4>
-            <p class="small opacity-75">
-                Home of the iconic White Beach and vibrant nightlife.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Visayas">
-            <img src="https://images.unsplash.com/photo-1566402184320-417e7178b2cd?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#3 Chocolate Hills</h4>
-            <p class="small opacity-75">
-                One of the most unique geological formations in the world.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Mindanao">
-            <img src="https://images.unsplash.com/photo-1518439179742-116075678401?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#4 Siargao, Surigao del Norte</h4>
-            <p class="small opacity-75">
-                The surfing capital of the Philippines, featuring the famous Cloud 9 surf break.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1582967634426-107faee2b5bd?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#5 Mayon Volcano, Albay</h4>
-            <p class="small opacity-75">
-                World-renowned for its perfectly symmetrical cone shape.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1589394815804-964ce052f25b?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#6 Intramuros, Manila</h4>
-            <p class="small opacity-75">
-                The historic walled city showcasing preserved Spanish colonial architecture.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1533619043865-1c2e1f467d5a?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#7 Coron, Palawan</h4>
-            <p class="small opacity-75">
-                A top global destination for wreck diving and the stunning Kayangan Lake.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Visayas">
-            <img src="https://images.unsplash.com/photo-1552943801-6c4db618e001?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#8 Kawasan Falls, Cebu</h4>
-            <p class="small opacity-75">
-                Vivid turquoise waterfalls famous for thrilling canyoneering adventures.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1622543034262-b9e3a61f3611?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#9 Puerto Princesa Subterranean River</h4>
-            <p class="small opacity-75">
-                A breathtaking UNESCO World Heritage underground river system.
-            </p>
-        </div>
-
-        <div class="glass-card spot-card" data-region="Luzon">
-            <img src="https://images.unsplash.com/photo-1540954020921-1b918a7a8d54?q=80&w=1200"
-                 style="width:100%; height:220px; object-fit:cover; border-radius:18px;">
-            <h4 class="mt-3">#10 Banaue Rice Terraces, Ifugao</h4>
-            <p class="small opacity-75">
-                Ancient, emerald-green agricultural terraces carved into the Cordillera mountains.
-            </p>
-        </div>
-
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // FILTER LOGIC
     function filterCards(region) {
-        // Update button states
         const buttons = document.querySelectorAll('#region-filters .btn-yellow-pill');
         buttons.forEach(btn => {
             if(btn.innerText === region) {
@@ -366,16 +262,15 @@
             }
         });
 
-        // Filter cards
         const cards = document.querySelectorAll('.spot-card');
         cards.forEach(card => {
             if (region === 'All' || card.getAttribute('data-region') === region) {
-                card.style.display = 'flex';
-                // Slight animation reset
+                // Because the card is inside a parent flex/grid wrapper div, we need to show/hide the parent wrapper
+                card.parentElement.style.display = 'block'; 
                 card.style.opacity = '0';
                 setTimeout(() => { card.style.opacity = '1'; }, 50);
             } else {
-                card.style.display = 'none';
+                card.parentElement.style.display = 'none';
             }
         });
     }
@@ -394,7 +289,6 @@
         }
     }
 
-    // 1. BULLETPROOF DJANGO SECURITY COOKIE READER
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -411,7 +305,6 @@
     }
     const csrftoken = getCookie('csrftoken');
 
-    // 2. THE REACTION LOGIC
     function toggleLike(btn, reportId) {
         fetch(`/like/${reportId}/`, {
             method: 'POST',
@@ -435,7 +328,6 @@
         });
     }
 
-    // 3. DELETE COMMENT LOGIC
     function deleteComment(commentId, reportId) {
         if (!confirm('Are you sure you want to delete this comment?')) return;
 
@@ -460,7 +352,6 @@
         .catch(error => console.error('Error:', error));
     }
 
-    // 4. POST COMMENT LOGIC
     function handleCommentEnter(event, reportId) {
         if (event.key === 'Enter') postComment(reportId, '{{ request.user.username }}');
     }
