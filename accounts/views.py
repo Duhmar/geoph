@@ -14,7 +14,8 @@ import urllib.request
 import urllib.error
 
 def home(request):
-    reports = Report.objects.all().order_by('-created_at')
+    # The minus sign is removed here so it sorts #1 to #20 chronologically
+    reports = Report.objects.all().order_by('created_at')
     hotels = Hotel.objects.all()
     query = request.GET.get('q')
     
@@ -75,7 +76,12 @@ def report_create(request):
 
 @login_required
 def report_update(request, pk):
-    report = get_object_or_404(Report, pk=pk, author=request.user)
+    # SECURITY FIX: Allow Admin/Staff to edit any report, otherwise restrict to author only
+    if request.user.is_staff:
+        report = get_object_or_404(Report, pk=pk)
+    else:
+        report = get_object_or_404(Report, pk=pk, author=request.user)
+        
     if request.method == 'POST':
         form = ReportForm(request.POST, request.FILES, instance=report)
         files = request.FILES.getlist('extra_media')
