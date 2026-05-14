@@ -299,12 +299,26 @@
             <div class="routing-controls">
                 <select id="end-location" class="route-select">
                     <option value="">Select Destination...</option>
+                    <option value="9.8499,126.0450">Siargao, Surigao del Norte</option>
                     <option value="11.2043,119.3870">El Nido, Palawan</option>
-                    <option value="11.9674,121.9248">Boracay</option>
-                    <option value="9.8349,124.1435">Chocolate Hills</option>
-                    <option value="13.2543,123.6854">Mayon Volcano</option>
-                    <option value="9.2000,118.0000">Underground River</option>
+                    <option value="11.9674,121.9248">Boracay Island, Aklan</option>
+                    <option value="11.9980,120.2043">Coron, Palawan</option>
+                    <option value="9.8349,124.1435">Chocolate Hills, Bohol</option>
                     <option value="16.9190,121.0611">Banaue Rice Terraces</option>
+                    <option value="20.4485,121.9708">Batanes</option>
+                    <option value="10.1926,118.9266">Puerto Princesa Subterranean River</option>
+                    <option value="9.8024,123.3742">Kawasan Falls, Cebu</option>
+                    <option value="13.2543,123.6854">Mayon Volcano, Albay</option>
+                    <option value="14.5896,120.9747">Intramuros, Manila</option>
+                    <option value="9.1732,124.7299">Camiguin Island</option>
+                    <option value="9.1999,123.5952">Siquijor</option>
+                    <option value="17.5742,120.3869">Vigan, Ilocos Sur</option>
+                    <option value="9.0798,123.2711">Apo Island, Negros Oriental</option>
+                    <option value="16.4023,120.5960">Baguio City</option>
+                    <option value="8.8413,119.9000">Tubbataha Reefs</option>
+                    <option value="17.0807,120.9038">Sagada, Mountain Province</option>
+                    <option value="10.7202,122.5621">Iloilo & Islas de Gigantes</option>
+                    <option value="12.9095,123.5980">Donsol, Sorsogon</option>
                 </select>
                 <button class="route-btn" onclick="calculateRoute()">Show Route</button>
             </div>
@@ -411,7 +425,6 @@
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // NEW: Send the request to your secure Django backend instead of the public internet!
             const csrftoken = getCookie('csrftoken');
             
             fetch('/chat/', {
@@ -522,6 +535,7 @@
             const endLat = parseFloat(endCoords[0]);
             const endLon = parseFloat(endCoords[1]);
 
+            // OSRM Driving profile automatically uses established RORO ferry routes!
             const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?geometries=geojson&overview=full`;
 
             try {
@@ -537,7 +551,7 @@
                     L.marker([endLat, endLon]).addTo(map).bindPopup("Destination");
                     map.fitBounds(routeLayer.getBounds(), {padding: [20, 20]});
                 } else {
-                    alert("No direct driving route found. This usually happens when trying to route between islands without a connected RORO ferry path.");
+                    alert("No direct driving/RORO ferry route found from your exact location to this island. Try a different destination.");
                 }
             } catch(e) {
                 console.error("Routing error", e);
