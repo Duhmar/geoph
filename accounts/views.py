@@ -71,7 +71,7 @@ def report_create(request):
             return redirect('report_list')
     else:
         form = ReportForm()
-    return render(request, 'reports/report_form.html', {'form': form, 'title': 'New Activity'})
+    return render(request, 'reports/report_form.html', {'form': form, 'title': 'Upload Sceneries'})
 
 @login_required
 def report_update(request, pk):
@@ -89,7 +89,7 @@ def report_update(request, pk):
             return redirect('report_list')
     else:
         form = ReportForm(instance=report)
-    return render(request, 'reports/report_form.html', {'form': form, 'title': 'Edit Activity'})
+    return render(request, 'reports/report_form.html', {'form': form, 'title': 'Edit Sceneries'})
 
 @login_required
 def report_delete(request, pk):
