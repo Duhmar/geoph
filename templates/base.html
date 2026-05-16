@@ -34,27 +34,36 @@
         .dark-mode input, .dark-mode textarea { color: white !important; background: rgba(0,0,0,0.4) !important; }
 
         @media (max-width: 768px) and (orientation: portrait) {
-            .navbar-container { padding: 8px 12px; } 
-            .navbar-brand { font-size: 1.3rem !important; } 
-            .search-wrapper { max-width: 130px; } 
+            .navbar-container { padding: 8px 12px; }
+            .navbar-brand { font-size: 1.3rem !important; }
+            .search-wrapper { max-width: 140px; }
             .nav-search-input { font-size: 0.75rem !important; padding: 5px 12px !important; }
-            
-            /* FIXED: Make the dropdown wider than the search bar on mobile */
-            .trending-dropdown { width: 220px; left: -45px; } 
-            
-            .theme-toggle-btn { width: 35px; height: 35px; font-size: 1rem; margin-right: 8px; } 
+            .trending-dropdown { width: 220px; left: -20px; }
+            .theme-toggle-btn { width: 35px; height: 35px; font-size: 1rem; margin-right: 8px; }
             .hamburger-btn { font-size: 1.5rem; padding: 0 5px; }
-            
-            /* FIXED: Keep panels inside the mobile screen boundaries */
-            .centered-panel { width: 92vw !important; max-width: 100%; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; }
-            .fullscreen-panel { width: 95vw !important; height: 80vh !important; top: 55% !important; }
-            .chat-panel { position: fixed !important; width: 92vw !important; height: 65vh !important; bottom: 80px !important; left: 50% !important; transform: translateX(-50%) !important; }
-            
-            .magical-chat-widget { bottom: 15px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; }
-            .widget-toggle-btn { margin: 0 auto; width: 55px; height: 55px; font-size: 0.8rem; } 
-            .glass-dropdown { right: -5px; width: 200px; } 
+
+            /* FIX: Centered strictly to the screen viewport */
+            .centered-panel, .fullscreen-panel { 
+                position: fixed !important; width: 90vw !important; left: 5vw !important; 
+                top: 10vh !important; transform: none !important; max-height: 80vh; 
+            }
+            .fullscreen-panel { height: 80vh !important; }
+
+            /* FIX: Widget Parent and Panel un-nested positioning */
+            .magical-chat-widget { 
+                position: fixed; bottom: 15px; left: 0; width: 100%; 
+                display: flex; flex-direction: column; align-items: center; 
+                transform: none; padding: 0; margin: 0; 
+            }
+            .chat-panel { 
+                position: fixed !important; width: 90vw !important; height: 60vh !important; 
+                bottom: 80px !important; left: 5vw !important; transform: none !important; margin: 0 !important; 
+            }
+            .widget-toggle-btn { width: 55px; height: 55px; font-size: 0.8rem; margin: 0 auto; }
+            .glass-dropdown { right: 10px; width: 200px; }
             .widget-header h4 { font-size: 1rem; }
         }
+
         @media (max-width: 850px) and (orientation: landscape) { .chat-panel { height: 75vh !important; } }
         #gold-loader-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: inherit; backdrop-filter: blur(20px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .gold-spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top-color: var(--gold-effect); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -289,8 +298,12 @@
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message msg-bot';
                 
-                if(data.error) { botMsgDiv.textContent = "Oops! AI is resting: " + data.error; } 
-                else { botMsgDiv.textContent = data.response; }
+                // If backend gives an error, print the EXACT error. Otherwise, print the response.
+                if(data.error) { 
+                    botMsgDiv.textContent = "AI Error: " + data.error; 
+                } else { 
+                    botMsgDiv.textContent = data.response; 
+                }
                 
                 chatMessages.appendChild(botMsgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -299,7 +312,7 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Oops! Could not connect to the AI brain. Ensure your API key is in Render.";
+                errorDiv.textContent = "Network Error: Could not reach the Django backend.";
                 chatMessages.appendChild(errorDiv);
             });
         }

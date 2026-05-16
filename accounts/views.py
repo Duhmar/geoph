@@ -206,21 +206,19 @@ def chat_api(request):
             user_message = data.get('message', '')
             api_key = os.environ.get('OPENROUTER_API_KEY')
             
-            # 1. Hard check to see if Render actually has the key
             if not api_key:
-                return JsonResponse({'error': 'Render is missing the OPENROUTER_API_KEY environment variable.'})
+                return JsonResponse({'error': 'Render is missing the OPENROUTER_API_KEY in its Environment Variables.'})
 
             url = 'https://openrouter.ai/api/v1/chat/completions'
             headers = {
                 'Content-Type': 'application/json',
                 'Authorization': f'Bearer {api_key}',
-                'HTTP-Referer': request.build_absolute_uri(),
+                'HTTP-Referer': 'https://geoph.onrender.com', # Hardcoded to bypass OpenRouter security blocks
                 'X-Title': 'GeoPH'
             }
             
-            # 2. Switched to Google Gemma 2 (Extremely fast and reliable on OpenRouter's free tier)
             payload = {
-                "model": "google/gemma-2-9b-it:free",
+                "model": "meta-llama/llama-3.1-8b-instruct:free",
                 "messages": [
                     {"role": "system", "content": "You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences."},
                     {"role": "user", "content": user_message}
@@ -229,14 +227,20 @@ def chat_api(request):
 
             req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
             
-            # 3. Added a 10-second timeout so the website doesn't freeze if the AI server is slow
-            with urllib.request.urlopen(req, timeout=10) as response:
-                response_data = json.loads(response.read().decode('utf-8'))
-                bot_message = response_data['choices'][0]['message']['content']
-                return JsonResponse({'response': bot_message})
+            try:
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    response_data = json.loads(response.read().decode('utf-8'))
+                    bot_message = response_data['choices'][0]['message']['content']
+                    return JsonResponse({'response': bot_message})
+                    
+            except urllib.error.HTTPError as e:
+                # This catches API keys being wrong, rate limits, or OpenRouter being down!
+                error_info = e.read().decode('utf-8')
+                return JsonResponse({'error': f"OpenRouter rejected the request (Code {e.code}): {error_info}"})
+            except urllib.error.URLError as e:
+                return JsonResponse({'error': f"Failed to connect to OpenRouter: {str(e)}"})
                 
         except Exception as e:
-            # 4. Return the exact error to the frontend so we know what broke
-            return JsonResponse({'error': f"API Error: {str(e)}"}, status=500)
+            return JsonResponse({'error': f"Server crashed: {str(e)}"})
             
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({'error': 'Invalid POST request'})
