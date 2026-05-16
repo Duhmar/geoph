@@ -10,7 +10,7 @@
     
     <style>
         :root { --gold-effect: #ffeb3b; --body-font: 'Poppins', sans-serif; }
-        body { background: linear-gradient(-45deg, #ff3d00, #ffeb3b, #2196f3, #e91e63, #00e676); background-size: 400% 400%; animation: rainbow-flow 20s ease infinite; min-height: 100vh; color: white; font-family: var(--body-font); margin: 0; font-weight: 400; transition: color 0.3s ease; }
+        body { background: linear-gradient(-45deg, #ff3d00, #ffeb3b, #2196f3, #e91e63, #00e676); background-size: 400% 400%; animation: rainbow-flow 20s ease infinite; min-height: 100vh; color: white; font-family: var(--body-font); margin: 0; font-weight: 400; transition: color 0.3s ease; overflow-x: hidden; }
         @keyframes rainbow-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .navbar-brand { color: var(--gold-effect) !important; text-shadow: 0 0 15px rgba(255, 235, 59, 0.7); text-decoration: none; font-weight: 600; }
         .navbar-container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50px; padding: 10px 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.1); margin-top: 15px; z-index: 1000; position: relative; }
@@ -33,7 +33,44 @@
         .dark-mode .theme-toggle-btn { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
         .dark-mode input, .dark-mode textarea { color: white !important; background: rgba(0,0,0,0.4) !important; }
 
-        @media (max-width: 768px) and (orientation: portrait) {
+        /* LOADER */
+        #gold-loader-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: inherit; backdrop-filter: blur(20px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .gold-spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top-color: var(--gold-effect); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* PANELS */
+        .glass-panel-widget { display: none; background: rgba(20, 20, 30, 0.25); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 28px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.05); flex-direction: column; overflow: hidden; animation: popUpCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popUpCenter { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        .fullscreen-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw !important; height: 90vh !important; z-index: 10000; }
+        .widget-header { background: rgba(0, 0, 0, 0.2); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .widget-title { color: var(--gold-effect); margin: 0; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 235, 59, 0.5); }
+        
+        /* FIXED CHAT UI */
+        .chat-panel { position: fixed; bottom: 100px; right: 30px; width: 380px; height: 550px; z-index: 9999; transform-origin: bottom right; margin: 0; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        /* FIXED: Added width: fit-content so bubbles hug text tightly */
+        .message { width: fit-content; max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
+        .msg-bot { background: rgba(255, 255, 255, 0.1); color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .msg-user { background: var(--gold-effect); color: black; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(255, 235, 59, 0.3); }
+        .chat-input-area { padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; }
+        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white !important; font-size: 0.85rem; outline: none; transition: 0.3s; }
+        .chat-input:focus { border-color: var(--gold-effect); background: rgba(0,0,0,0.3); }
+        .chat-send-btn { background: var(--gold-effect); border: none; border-radius: 50%; width: 38px; height: 38px; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);}
+        
+        /* FIXED: Independent Floating Action Button pinned to bottom right */
+        .widget-toggle-btn { position: fixed; bottom: 30px; right: 30px; z-index: 10000; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 2px solid var(--gold-effect); color: var(--gold-effect); width: 65px; height: 65px; border-radius: 50%; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 235, 59, 0.3); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
+        .widget-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 235, 59, 0.6); }
+        
+        /* MAP STYLES */
+        .map-container { flex: 1; padding: 15px; position: relative; display: flex; flex-direction: column; gap: 15px;}
+        .routing-controls { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; display: flex; flex-direction: row; gap: 15px; align-items: center; justify-content: center;}
+        .route-select { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; padding: 10px; font-family: var(--body-font); font-size: 0.9rem; flex: 1; outline: none;}
+        .route-select option { background: #1a1a1a; color: white; }
+        .route-btn { background: var(--gold-effect); color: black; border: none; border-radius: 12px; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: 0.3s;}
+        .route-btn:hover { box-shadow: 0 0 15px rgba(255,235,59,0.5); transform: translateY(-2px); }
+
+        /* PERFECT MOBILE LAYOUT FOR S25 ULTRA */
+        @media (max-width: 768px) {
             .navbar-container { padding: 8px 12px; }
             .navbar-brand { font-size: 1.3rem !important; }
             .search-wrapper { max-width: 140px; }
@@ -42,57 +79,19 @@
             .theme-toggle-btn { width: 35px; height: 35px; font-size: 1rem; margin-right: 8px; }
             .hamburger-btn { font-size: 1.5rem; padding: 0 5px; }
 
-            /* FIX: Centered strictly to the screen viewport */
-            .centered-panel, .fullscreen-panel { 
-                position: fixed !important; width: 90vw !important; left: 5vw !important; 
-                top: 10vh !important; transform: none !important; max-height: 80vh; 
-            }
-            .fullscreen-panel { height: 80vh !important; }
-
-            /* FIX: Widget Parent and Panel un-nested positioning */
-            .magical-chat-widget { 
-                position: fixed; bottom: 15px; left: 0; width: 100%; 
-                display: flex; flex-direction: column; align-items: center; 
-                transform: none; padding: 0; margin: 0; 
-            }
+            .fullscreen-panel { width: 95vw !important; height: 80vh !important; top: 50% !important; left: 50% !important; }
+            
+            /* Chat Button perfectly anchored to bottom right */
+            .widget-toggle-btn { bottom: 20px; right: 20px; width: 60px; height: 60px; font-size: 0.8rem; }
+            
+            /* Chat Panel stretches across bottom screen, anchored to button */
             .chat-panel { 
-                position: fixed !important; width: 90vw !important; height: 60vh !important; 
-                bottom: 80px !important; left: 5vw !important; transform: none !important; margin: 0 !important; 
+                bottom: 90px !important; right: 5vw !important; left: 5vw !important; 
+                width: 90vw !important; height: 65vh !important; transform-origin: bottom right;
             }
-            .widget-toggle-btn { width: 55px; height: 55px; font-size: 0.8rem; margin: 0 auto; }
             .glass-dropdown { right: 10px; width: 200px; }
             .widget-header h4 { font-size: 1rem; }
         }
-
-        @media (max-width: 850px) and (orientation: landscape) { .chat-panel { height: 75vh !important; } }
-        #gold-loader-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: inherit; backdrop-filter: blur(20px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .gold-spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top-color: var(--gold-effect); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .glass-panel-widget { display: none; background: rgba(20, 20, 30, 0.25); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 28px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.05); flex-direction: column; overflow: hidden; animation: popUpCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popUpCenter { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-        .fullscreen-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw !important; height: 90vh !important; z-index: 10000; }
-        .widget-header { background: rgba(0, 0, 0, 0.2); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .widget-title { color: var(--gold-effect); margin: 0; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 235, 59, 0.5); }
-        .magical-chat-widget { position: fixed; bottom: 30px; left: 30px; z-index: 9999; font-family: var(--body-font); }
-        .chat-panel { width: 350px; height: 500px; transform: none; position: relative; bottom: 15px; animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom left; }
-        @keyframes popUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 0.85rem; line-height: 1.4; }
-        .msg-bot { background: rgba(255, 255, 255, 0.1); color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
-        .msg-user { background: var(--gold-effect); color: black; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(255, 235, 59, 0.3); }
-        .chat-input-area { padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white !important; font-size: 0.85rem; outline: none; transition: 0.3s; }
-        .chat-input:focus { border-color: var(--gold-effect); background: rgba(0,0,0,0.3); }
-        .chat-send-btn { background: var(--gold-effect); border: none; border-radius: 50%; width: 38px; height: 38px; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);}
-        .widget-toggle-btn { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 2px solid var(--gold-effect); color: var(--gold-effect); width: 60px; height: 60px; border-radius: 50%; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 235, 59, 0.3); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
-        .widget-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 235, 59, 0.6); }
-        .map-container { flex: 1; padding: 15px; position: relative; display: flex; flex-direction: column; gap: 15px;}
-        .routing-controls { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; display: flex; flex-direction: row; gap: 15px; align-items: center; justify-content: center;}
-        .route-select { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; padding: 10px; font-family: var(--body-font); font-size: 0.9rem; flex: 1; outline: none;}
-        .route-select option { background: #1a1a1a; color: white; }
-        .route-btn { background: var(--gold-effect); color: black; border: none; border-radius: 12px; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: 0.3s;}
-        .route-btn:hover { box-shadow: 0 0 15px rgba(255,235,59,0.5); transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -151,21 +150,20 @@
         {% block content %}{% endblock %}
     </div>
 
-    <div class="magical-chat-widget">
-        <div class="glass-panel-widget chat-panel" id="chatPanel" style="display: none;">
-            <div class="widget-header">
-                <h4 class="widget-title">Philippines AI Guide</h4>
-                <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.4rem; transition: 0.2s;">×</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message msg-bot">Hello explorer! I am powered by Meta Llama 3. Ask me anything about tourist spots in the Philippines!</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything..." onkeypress="handleEnter(event)">
-                <button class="chat-send-btn" onclick="sendMessage()">></button>
-            </div>
+    <button class="widget-toggle-btn" id="chatToggleBtn" onclick="toggleChat()">Chat</button>
+
+    <div class="glass-panel-widget chat-panel" id="chatPanel" style="display: none;">
+        <div class="widget-header">
+            <h4 class="widget-title">Philippines AI Guide</h4>
+            <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.4rem; transition: 0.2s;">×</button>
         </div>
-        <button class="widget-toggle-btn" id="chatToggleBtn" onclick="toggleChat()">Chat</button>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message msg-bot">Hello explorer! I am powered by Meta Llama 3. Ask me anything about tourist spots in the Philippines!</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything..." onkeypress="handleEnter(event)">
+            <button class="chat-send-btn" onclick="sendMessage()">></button>
+        </div>
     </div>
 
     <div class="glass-panel-widget fullscreen-panel" id="mapPanel" style="display: none;">
@@ -240,21 +238,6 @@
             } else { if (btn) btn.textContent = '🌙'; }
         });
 
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
         function toggleChat() {
             const panel = document.getElementById('chatPanel');
             const btn = document.getElementById('chatToggleBtn');
@@ -265,6 +248,7 @@
 
         function handleEnter(event) { if (event.key === 'Enter') sendMessage(); }
         
+        // 100% GUARANTEED FETCH LOGIC
         function sendMessage() {
             const inputField = document.getElementById('chatInput');
             const messageText = inputField.value.trim();
@@ -285,26 +269,27 @@
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            const csrftoken = getCookie('csrftoken');
-            
             fetch('/chat/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                headers: { 'Content-Type': 'application/json' }, // CSRF removed thanks to backend decorator
                 body: JSON.stringify({ "message": messageText })
             })
-            .then(response => response.json())
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    const data = JSON.parse(text);
+                    if (!response.ok) throw new Error(data.error || `HTTP Error ${response.status}`);
+                    return data;
+                } catch (e) {
+                    // If Django throws a 500/403 HTML page, this will catch it instead of hiding it!
+                    throw new Error(response.ok ? "Invalid JSON from server" : `Django Server Code: ${response.status}`);
+                }
+            })
             .then(data => {
                 document.getElementById('typingIndicator').remove();
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message msg-bot';
-                
-                // If backend gives an error, print the EXACT error. Otherwise, print the response.
-                if(data.error) { 
-                    botMsgDiv.textContent = "AI Error: " + data.error; 
-                } else { 
-                    botMsgDiv.textContent = data.response; 
-                }
-                
+                botMsgDiv.textContent = data.response || "No response received.";
                 chatMessages.appendChild(botMsgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             })
@@ -312,8 +297,9 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Network Error: Could not reach the Django backend.";
+                errorDiv.textContent = "Error: " + error.message; // Prints EXACTLY why it failed!
                 chatMessages.appendChild(errorDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             });
         }
 
