@@ -203,7 +203,7 @@ def chat_api(request):
             }
             
             payload = {
-                "model": "google/gemma-2-9b-it:free",
+                "model": "openrouter/free",
                 "messages": [
                     {"role": "system", "content": "You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences."},
                     {"role": "user", "content": user_message}
