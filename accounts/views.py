@@ -205,6 +205,10 @@ def chat_api(request):
             data = json.loads(request.body)
             user_message = data.get('message', '')
             api_key = os.environ.get('OPENROUTER_API_KEY')
+            
+            # 1. Hard check to see if Render actually has the key
+            if not api_key:
+                return JsonResponse({'error': 'Render is missing the OPENROUTER_API_KEY environment variable.'})
 
             url = 'https://openrouter.ai/api/v1/chat/completions'
             headers = {
@@ -214,8 +218,9 @@ def chat_api(request):
                 'X-Title': 'GeoPH'
             }
             
+            # 2. Switched to Google Gemma 2 (Extremely fast and reliable on OpenRouter's free tier)
             payload = {
-                "model": "meta-llama/llama-3.1-8b-instruct:free",
+                "model": "google/gemma-2-9b-it:free",
                 "messages": [
                     {"role": "system", "content": "You are a friendly tour guide for the Philippines. Recommend tourist spots, beaches, mountains, islands, and cultural places. Keep answers under 3 sentences."},
                     {"role": "user", "content": user_message}
@@ -223,12 +228,15 @@ def chat_api(request):
             }
 
             req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-            with urllib.request.urlopen(req) as response:
+            
+            # 3. Added a 10-second timeout so the website doesn't freeze if the AI server is slow
+            with urllib.request.urlopen(req, timeout=10) as response:
                 response_data = json.loads(response.read().decode('utf-8'))
                 bot_message = response_data['choices'][0]['message']['content']
                 return JsonResponse({'response': bot_message})
                 
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            # 4. Return the exact error to the frontend so we know what broke
+            return JsonResponse({'error': f"API Error: {str(e)}"}, status=500)
             
     return JsonResponse({'error': 'Invalid request'}, status=400)
