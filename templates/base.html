@@ -9,149 +9,67 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
     <style>
-        :root {
-            --gold-effect: #ffeb3b;
-            --body-font: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(-45deg, #ff3d00, #ffeb3b, #2196f3, #e91e63, #00e676);
-            background-size: 400% 400%;
-            animation: rainbow-flow 20s ease infinite;
-            min-height: 100vh;
-            color: white;
-            font-family: var(--body-font);
-            margin: 0;
-            font-weight: 400;
-            transition: color 0.3s ease; 
-        }
-
-        @keyframes rainbow-flow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .navbar-brand {
-            color: var(--gold-effect) !important;
-            text-shadow: 0 0 15px rgba(255, 235, 59, 0.7);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .navbar-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50px;
-            padding: 10px 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.1);
-            margin-top: 15px;
-            z-index: 1000;
-            position: relative;
-        }
-
+        :root { --gold-effect: #ffeb3b; --body-font: 'Poppins', sans-serif; }
+        body { background: linear-gradient(-45deg, #ff3d00, #ffeb3b, #2196f3, #e91e63, #00e676); background-size: 400% 400%; animation: rainbow-flow 20s ease infinite; min-height: 100vh; color: white; font-family: var(--body-font); margin: 0; font-weight: 400; transition: color 0.3s ease; }
+        @keyframes rainbow-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .navbar-brand { color: var(--gold-effect) !important; text-shadow: 0 0 15px rgba(255, 235, 59, 0.7); text-decoration: none; font-weight: 600; }
+        .navbar-container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50px; padding: 10px 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.1); margin-top: 15px; z-index: 1000; position: relative; }
         .search-wrapper { max-width: 350px; width: 100%; position: relative; }
-        .nav-search-input {
-            background: rgba(0, 0, 0, 0.2) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            border-radius: 50px !important;
-            color: white !important;
-            padding: 7px 20px !important;
-            font-size: 0.85rem;
-            transition: 0.3s ease;
-        }
-        .nav-search-input:focus {
-            background: rgba(0, 0, 0, 0.4) !important;
-            box-shadow: 0 0 15px rgba(255, 235, 59, 0.4);
-            border-color: var(--gold-effect) !important;
-            outline: none;
-        }
-
-        .trending-dropdown {
-            position: absolute; top: 45px; left: 0; width: 100%; 
-            background: rgba(30, 30, 40, 0.85); backdrop-filter: blur(20px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 18px;
-            padding: 10px 0; z-index: 10500; display: none;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            flex-direction: column;
-        }
-        .trending-dropdown a {
-            color: white; text-decoration: none; padding: 8px 20px;
-            font-size: 0.85rem; transition: background 0.2s;
-            display: block;
-        }
+        .nav-search-input { background: rgba(0, 0, 0, 0.2) !important; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3) !important; border-radius: 50px !important; color: white !important; padding: 7px 20px !important; font-size: 0.85rem; transition: 0.3s ease; }
+        .nav-search-input:focus { background: rgba(0, 0, 0, 0.4) !important; box-shadow: 0 0 15px rgba(255, 235, 59, 0.4); border-color: var(--gold-effect) !important; outline: none; }
+        .trending-dropdown { position: absolute; top: 45px; left: 0; width: 100%; background: rgba(30, 30, 40, 0.85); backdrop-filter: blur(20px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 18px; padding: 10px 0; z-index: 10500; display: none; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); flex-direction: column; }
+        .trending-dropdown a { color: white; text-decoration: none; padding: 8px 20px; font-size: 0.85rem; transition: background 0.2s; display: block; }
         .trending-dropdown a:hover { background: rgba(255, 255, 255, 0.1); }
         .trending-dropdown .trend-rank { color: var(--gold-effect); font-weight: bold; margin-right: 8px; }
-
-        .theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-top: 1px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            color: var(--gold-effect);
-            border-radius: 50%;
-            width: 45px; height: 45px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s;
-            margin-right: 15px;
-            font-size: 1.3rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.1);
-        }
+        .theme-toggle-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); color: var(--gold-effect); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; margin-right: 15px; font-size: 1.3rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.1); }
         .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); box-shadow: 0 5px 20px rgba(255,235,59,0.4); }
-
         .hamburger-btn { background: transparent; border: none; color: var(--gold-effect); font-size: 2rem; line-height: 1; padding: 0 10px; cursor: pointer; transition: 0.3s; }
         .hamburger-btn:hover { text-shadow: 0 0 20px rgba(255, 235, 59, 0.9); transform: scale(1.1); }
-
-        .glass-dropdown {
-            position: absolute; top: 60px; right: 0; background: rgba(30, 30, 40, 0.15); backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px; padding: 12px; min-width: 200px; z-index: 10500; box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
-            display: none; flex-direction: column; gap: 8px; 
-        }
-
-        .glass-dropdown a, .glass-dropdown button {
-            color: white; padding: 12px 20px; text-decoration: none; display: block; background: rgba(255, 255, 255, 0.1); 
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 50px; text-align: center; width: 100%; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: var(--body-font); font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+        .glass-dropdown { position: absolute; top: 60px; right: 0; background: rgba(30, 30, 40, 0.15); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 24px; padding: 12px; min-width: 200px; z-index: 10500; box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05); display: none; flex-direction: column; gap: 8px; }
+        .glass-dropdown a, .glass-dropdown button { color: white; padding: 12px 20px; text-decoration: none; display: block; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 50px; text-align: center; width: 100%; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: var(--body-font); font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .glass-dropdown a:hover, .glass-dropdown button:hover { background: var(--gold-effect); color: black !important; font-weight: 600; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 235, 59, 0.4); border-color: var(--gold-effect); }
-
         body.dark-mode { background: linear-gradient(-45deg, #0f172a, #1e1e2f, #0f3460, #16213e); color: #ffffff; }
         .dark-mode .glass-panel-widget, .dark-mode .glass-dropdown, .dark-mode .navbar-container { background: rgba(10, 10, 15, 0.5); border-color: rgba(255, 255, 255, 0.1); }
-        .dark-mode .hotel-card { background: rgba(0,0,0,0.6); }
         .dark-mode .theme-toggle-btn { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
         .dark-mode input, .dark-mode textarea { color: white !important; background: rgba(0,0,0,0.4) !important; }
 
         @media (max-width: 768px) and (orientation: portrait) {
-            .navbar-container { padding: 8px 12px; }
-            .navbar-brand { font-size: 1.3rem !important; }
-            .search-wrapper { max-width: 130px; } 
-            .nav-search-input { font-size: 0.75rem !important; padding: 5px 12px !important; }
-            
-            .theme-toggle-btn { width: 35px; height: 35px; font-size: 1rem; margin-right: 8px; }
-            .hamburger-btn { font-size: 1.5rem; padding: 0 5px; }
-
+            .navbar-container { padding: 8px 12px; } .navbar-brand { font-size: 1.3rem !important; } .search-wrapper { max-width: 130px; } .nav-search-input { font-size: 0.75rem !important; padding: 5px 12px !important; }
+            .theme-toggle-btn { width: 35px; height: 35px; font-size: 1rem; margin-right: 8px; } .hamburger-btn { font-size: 1.5rem; padding: 0 5px; }
             .centered-panel { width: 92vw !important; max-width: 100%; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; }
             .chat-panel { position: fixed !important; width: 92vw !important; height: 60vh !important; bottom: 80px !important; left: 50% !important; transform: translateX(-50%) !important; }
             .magical-chat-widget { bottom: 15px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; }
-            .widget-toggle-btn { margin: 0 auto; width: 55px; height: 55px; font-size: 0.8rem; }
-            .glass-dropdown { right: -5px; width: 200px; } 
-            .widget-header h4 { font-size: 1rem; }
+            .widget-toggle-btn { margin: 0 auto; width: 55px; height: 55px; font-size: 0.8rem; } .glass-dropdown { right: -5px; width: 200px; } .widget-header h4 { font-size: 1rem; }
         }
-
-        @media (max-width: 850px) and (orientation: landscape) {
-            .chat-panel { height: 75vh !important; }
-        }
-
+        @media (max-width: 850px) and (orientation: landscape) { .chat-panel { height: 75vh !important; } }
         #gold-loader-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: inherit; backdrop-filter: blur(20px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .gold-spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top-color: var(--gold-effect); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .glass-panel-widget { display: none; background: rgba(20, 20, 30, 0.25); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 28px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.05); flex-direction: column; overflow: hidden; animation: popUpCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popUpCenter { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        .fullscreen-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw !important; height: 90vh !important; z-index: 10000; }
+        .widget-header { background: rgba(0, 0, 0, 0.2); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .widget-title { color: var(--gold-effect); margin: 0; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 235, 59, 0.5); }
+        .magical-chat-widget { position: fixed; bottom: 30px; left: 30px; z-index: 9999; font-family: var(--body-font); }
+        .chat-panel { width: 350px; height: 500px; transform: none; position: relative; bottom: 15px; animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom left; }
+        @keyframes popUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 0.85rem; line-height: 1.4; }
+        .msg-bot { background: rgba(255, 255, 255, 0.1); color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .msg-user { background: var(--gold-effect); color: black; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(255, 235, 59, 0.3); }
+        .chat-input-area { padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; }
+        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white !important; font-size: 0.85rem; outline: none; transition: 0.3s; }
+        .chat-input:focus { border-color: var(--gold-effect); background: rgba(0,0,0,0.3); }
+        .chat-send-btn { background: var(--gold-effect); border: none; border-radius: 50%; width: 38px; height: 38px; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);}
+        .widget-toggle-btn { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 2px solid var(--gold-effect); color: var(--gold-effect); width: 60px; height: 60px; border-radius: 50%; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 235, 59, 0.3); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
+        .widget-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 235, 59, 0.6); }
+        .map-container { flex: 1; padding: 15px; position: relative; display: flex; flex-direction: column; gap: 15px;}
+        .routing-controls { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; display: flex; flex-direction: row; gap: 15px; align-items: center; justify-content: center;}
+        .route-select { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; padding: 10px; font-family: var(--body-font); font-size: 0.9rem; flex: 1; outline: none;}
+        .route-select option { background: #1a1a1a; color: white; }
+        .route-btn { background: var(--gold-effect); color: black; border: none; border-radius: 12px; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: 0.3s;}
+        .route-btn:hover { box-shadow: 0 0 15px rgba(255,235,59,0.5); transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -159,7 +77,6 @@
 
     <div class="container-fluid px-5 px-md-3">
         <nav class="navbar navbar-container d-flex w-100 align-items-center">
-            
             <div style="flex: 1;">
                 <a class="navbar-brand fs-3" href="{% url 'home' %}">GeoPH</a>
             </div>
@@ -184,9 +101,7 @@
             </div>
 
             <div class="d-flex justify-content-end align-items-center" style="flex: 1; position: relative;">
-                
                 <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleDarkMode()">🌙</button>
-
                 <button id="customHamburgerBtn" class="hamburger-btn" onclick="toggleMenu()">☰</button>
                 
                 <div id="customDropdown" class="glass-dropdown">
@@ -196,7 +111,6 @@
                     {% if user.is_authenticated %}
                         <a href="{% url 'analytics_dashboard' %}">Analytics</a>
                         <a href="{% url 'report_list' %}">Uploads</a> 
-                        <a href="#" onclick="toggleHotel(); toggleMenu(); return false;">Hotel</a>
                         <a href="{% url 'profile' %}">Profile</a>
                         <form method="POST" action="{% url 'logout' %}" class="m-0 d-flex w-100">
                             {% csrf_token %}
@@ -214,38 +128,6 @@
         {% block content %}{% endblock %}
     </div>
 
-    <style>
-        .glass-panel-widget { display: none; background: rgba(20, 20, 30, 0.25); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.5); border-left: 1px solid rgba(255, 255, 255, 0.5); border-radius: 28px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.05); flex-direction: column; overflow: hidden; animation: popUpCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popUpCenter { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-        .fullscreen-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw !important; height: 90vh !important; z-index: 10000; }
-        .centered-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; max-height: 85vh; z-index: 10000; }
-        .widget-header { background: rgba(0, 0, 0, 0.2); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .widget-title { color: var(--gold-effect); margin: 0; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 235, 59, 0.5); }
-        .magical-chat-widget { position: fixed; bottom: 30px; left: 30px; z-index: 9999; font-family: var(--body-font); }
-        .chat-panel { width: 350px; height: 500px; transform: none; position: relative; bottom: 15px; animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom left; }
-        @keyframes popUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 0.85rem; line-height: 1.4; }
-        .msg-bot { background: rgba(255, 255, 255, 0.1); color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
-        .msg-user { background: var(--gold-effect); color: black; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(255, 235, 59, 0.3); }
-        .chat-input-area { padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 8px 15px; color: white !important; font-size: 0.85rem; outline: none; transition: 0.3s; }
-        .chat-input:focus { border-color: var(--gold-effect); background: rgba(0,0,0,0.3); }
-        .chat-send-btn { background: var(--gold-effect); border: none; border-radius: 50%; width: 38px; height: 38px; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);}
-        .widget-toggle-btn { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 2px solid var(--gold-effect); color: var(--gold-effect); width: 60px; height: 60px; border-radius: 50%; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 235, 59, 0.3); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
-        .widget-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 235, 59, 0.6); }
-        .map-container { flex: 1; padding: 15px; position: relative; display: flex; flex-direction: column; gap: 15px;}
-        .routing-controls { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; display: flex; flex-direction: row; gap: 15px; align-items: center; justify-content: center;}
-        .route-select { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; padding: 10px; font-family: var(--body-font); font-size: 0.9rem; flex: 1; outline: none;}
-        .route-select option { background: #1a1a1a; color: white; }
-        .route-btn { background: var(--gold-effect); color: black; border: none; border-radius: 12px; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: 0.3s;}
-        .route-btn:hover { box-shadow: 0 0 15px rgba(255,235,59,0.5); transform: translateY(-2px); }
-        .hotel-card { background: rgba(0,0,0,0.25); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); margin-bottom: 15px; transition: 0.3s; }
-        .hotel-card:hover { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
-        .btn-glass-sm { background: var(--gold-effect); color: black; border-radius: 12px; padding: 8px 15px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,235,59,0.3);}
-        .btn-glass-sm:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255,235,59,0.6); }
-    </style>
-
     <div class="magical-chat-widget">
         <div class="glass-panel-widget chat-panel" id="chatPanel" style="display: none;">
             <div class="widget-header">
@@ -261,33 +143,6 @@
             </div>
         </div>
         <button class="widget-toggle-btn" id="chatToggleBtn" onclick="toggleChat()">Chat</button>
-    </div>
-
-    <div class="glass-panel-widget centered-panel" id="hotelPanel" style="display: none;">
-        <div class="widget-header">
-            <h4 class="widget-title">Island Accommodations</h4>
-            <button onclick="toggleHotel()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.4rem; transition: 0.2s;">×</button>
-        </div>
-        <div style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column;">
-            {% for hotel in hotels %}
-            <div class="hotel-card">
-                <h5 style="color: var(--gold-effect); margin-bottom: 5px; font-weight: 600;">{{ hotel.name }}</h5>
-                <p class="small text-white opacity-75 mb-2">{{ hotel.location }} | ₱{{ hotel.price_per_night }}/night</p>
-                <p class="small mb-3 fw-bold" style="color: #00e676;" id="rooms-left-{{ hotel.id }}">Available Rooms: {{ hotel.available_rooms }}</p>
-                {% if user.is_authenticated %}
-                    <div class="d-flex gap-2 mb-3">
-                        <input type="date" id="check-in-{{ hotel.id }}" class="chat-input" title="Check-in">
-                        <input type="date" id="check-out-{{ hotel.id }}" class="chat-input" title="Check-out">
-                    </div>
-                    <button onclick="bookHotel({{ hotel.id }})" class="btn-glass-sm w-100 text-center">Book Now</button>
-                {% else %}
-                    <p class="small text-warning mb-0">Please login to book a room.</p>
-                {% endif %}
-            </div>
-            {% empty %}
-                <p class="text-white opacity-50 text-center mt-4">No hotels available right now. Please add some from the Admin Panel.</p>
-            {% endfor %}
-        </div>
     </div>
 
     <div class="glass-panel-widget fullscreen-panel" id="mapPanel" style="display: none;">
@@ -334,12 +189,8 @@
         const trendingDropdown = document.getElementById('trendingDropdown');
 
         if(searchInput && trendingDropdown) {
-            searchInput.addEventListener('focus', () => {
-                trendingDropdown.style.display = 'flex';
-            });
-            searchInput.addEventListener('blur', () => {
-                setTimeout(() => { trendingDropdown.style.display = 'none'; }, 200);
-            });
+            searchInput.addEventListener('focus', () => { trendingDropdown.style.display = 'flex'; });
+            searchInput.addEventListener('blur', () => { setTimeout(() => { trendingDropdown.style.display = 'none'; }, 200); });
         }
 
         function toggleMenu() {
@@ -356,24 +207,14 @@
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const btn = document.getElementById('themeToggleBtn');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-                if (btn) btn.textContent = '☀️';
-            } else {
-                localStorage.setItem('theme', 'light');
-                if (btn) btn.textContent = '🌙';
-            }
+            if (document.body.classList.contains('dark-mode')) { localStorage.setItem('theme', 'dark'); if (btn) btn.textContent = '☀️';
+            } else { localStorage.setItem('theme', 'light'); if (btn) btn.textContent = '🌙'; }
         }
 
         window.addEventListener('load', function() {
             const btn = document.getElementById('themeToggleBtn');
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                if (btn) btn.textContent = '☀️';
-            } else {
-                if (btn) btn.textContent = '🌙';
-            }
+            if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); if (btn) btn.textContent = '☀️';
+            } else { if (btn) btn.textContent = '🌙'; }
         });
 
         function getCookie(name) {
@@ -395,12 +236,8 @@
             const panel = document.getElementById('chatPanel');
             const btn = document.getElementById('chatToggleBtn');
             if (panel.style.display === 'none' || panel.style.display === '') {
-                panel.style.display = 'flex';
-                btn.style.transform = 'scale(0.8)';
-            } else {
-                panel.style.display = 'none';
-                btn.style.transform = 'scale(1)';
-            }
+                panel.style.display = 'flex'; btn.style.transform = 'scale(0.8)';
+            } else { panel.style.display = 'none'; btn.style.transform = 'scale(1)'; }
         }
 
         function handleEnter(event) { if (event.key === 'Enter') sendMessage(); }
@@ -429,26 +266,17 @@
             
             fetch('/chat/', {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken 
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
                 body: JSON.stringify({ "message": messageText })
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Backend error');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 document.getElementById('typingIndicator').remove();
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message msg-bot';
                 
-                if(data.error) {
-                    botMsgDiv.textContent = "Oops! AI is resting: " + data.error;
-                } else {
-                    botMsgDiv.textContent = data.response;
-                }
+                if(data.error) { botMsgDiv.textContent = "Oops! AI is resting: " + data.error; } 
+                else { botMsgDiv.textContent = data.response; }
                 
                 chatMessages.appendChild(botMsgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -457,36 +285,9 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Oops! Could not connect to the AI brain. Ensure your API key is in the .env file.";
+                errorDiv.textContent = "Oops! Could not connect to the AI brain. Ensure your API key is in Render.";
                 chatMessages.appendChild(errorDiv);
             });
-        }
-
-        function toggleHotel() {
-            const panel = document.getElementById('hotelPanel');
-            const mapPanel = document.getElementById('mapPanel');
-            if(mapPanel.style.display === 'flex') { mapPanel.style.display = 'none'; }
-            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'flex' : 'none';
-        }
-
-        function bookHotel(hotelId) {
-            const checkIn = document.getElementById(`check-in-${hotelId}`).value;
-            const checkOut = document.getElementById(`check-out-${hotelId}`).value;
-            if (!checkIn || !checkOut) { alert("Please select both Check-In and Check-Out dates."); return; }
-            const csrftoken = getCookie('csrftoken');
-            fetch(`/book/${hotelId}/`, {
-                method: 'POST',
-                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 'check_in': checkIn, 'check_out': checkOut })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Reservation Confirmed! Enjoy your stay in the Philippines.');
-                    document.getElementById(`rooms-left-${hotelId}`).innerText = `Available Rooms: ${data.rooms_left}`;
-                } else { alert(data.message); }
-            })
-            .catch(error => console.error('Booking Error:', error));
         }
 
         let map, routeLayer, startCoordsGlobal = null;
@@ -500,20 +301,15 @@
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
                         startCoordsGlobal = [lat, lon];
-                        
                         map.setView(startCoordsGlobal, 10);
                         L.marker(startCoordsGlobal).addTo(map).bindPopup("<b>You are here</b>").openPopup();
-                    }, error => {
-                        console.log("Geolocation denied or failed.", error);
-                    });
+                    }, error => { console.log("Geolocation denied or failed.", error); });
                 }
             }
         }
 
         function toggleMap() {
             const panel = document.getElementById('mapPanel');
-            const hotelPanel = document.getElementById('hotelPanel');
-            if(hotelPanel.style.display === 'flex') { hotelPanel.style.display = 'none'; }
             if (panel.style.display === 'none' || panel.style.display === '') {
                 panel.style.display = 'flex';
                 setTimeout(() => { initMap(); map.invalidateSize(); }, 100);
@@ -523,11 +319,7 @@
         async function calculateRoute() {
             const endStr = document.getElementById('end-location').value;
             if (!endStr) return;
-            
-            if (!startCoordsGlobal) {
-                alert("Cannot determine your location. Please ensure location services are enabled.");
-                return;
-            }
+            if (!startCoordsGlobal) { alert("Cannot determine your location. Please ensure location services are enabled."); return; }
 
             const endCoords = endStr.split(',');
             const startLat = startCoordsGlobal[0];
@@ -535,7 +327,6 @@
             const endLat = parseFloat(endCoords[0]);
             const endLon = parseFloat(endCoords[1]);
 
-            // OSRM Driving profile automatically uses established RORO ferry routes!
             const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?geometries=geojson&overview=full`;
 
             try {
@@ -544,19 +335,14 @@
                 
                 if (data.code === 'Ok') {
                     if (routeLayer) map.removeLayer(routeLayer);
-                    
                     const geojson = data.routes[0].geometry;
                     routeLayer = L.geoJSON(geojson, {style: {color: '#ffeb3b', weight: 4}}).addTo(map);
-                    
                     L.marker([endLat, endLon]).addTo(map).bindPopup("Destination");
                     map.fitBounds(routeLayer.getBounds(), {padding: [20, 20]});
                 } else {
                     alert("No direct driving/RORO ferry route found from your exact location to this island. Try a different destination.");
                 }
-            } catch(e) {
-                console.error("Routing error", e);
-                alert("Failed to calculate route. Please try again.");
-            }
+            } catch(e) { console.error("Routing error", e); alert("Failed to calculate route. Please try again."); }
         }
 
         window.addEventListener('load', function() {
@@ -566,14 +352,6 @@
                 setTimeout(() => { loader.style.display = 'none'; }, 800);
             }, 500);
         });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                    console.log('GeoPH Offline Engine Online:', registration.scope);
-                }, function(err) { console.log('ServiceWorker registration failed: ', err); });
-            });
-        }
     </script>
 </body>
 </html>

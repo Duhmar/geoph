@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import Report, Profile, ReportMedia, Comment, Hotel, RoomBooking
+from .models import Report, Profile, ReportMedia, Comment
 from .forms import ReportForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -14,9 +14,7 @@ import urllib.request
 import urllib.error
 
 def home(request):
-    # The minus sign is removed here so it sorts #1 to #20 chronologically
     reports = Report.objects.all().order_by('created_at')
-    hotels = Hotel.objects.all()
     query = request.GET.get('q')
     
     if query:
@@ -27,7 +25,7 @@ def home(request):
             Q(region__icontains=query)
         )
     
-    return render(request, 'home.html', {'reports': reports, 'hotels': hotels})
+    return render(request, 'home.html', {'reports': reports})
 
 @login_required
 def profile_view(request):
@@ -76,7 +74,6 @@ def report_create(request):
 
 @login_required
 def report_update(request, pk):
-    # SECURITY FIX: Allow Admin/Staff to edit any report, otherwise restrict to author only
     if request.user.is_staff:
         report = get_object_or_404(Report, pk=pk)
     else:
@@ -151,14 +148,12 @@ def admin_delete_report(request, pk):
 def toggle_like(request, pk):
     if request.method == "POST":
         report = get_object_or_404(Report, pk=pk)
-        
         if request.user in report.likes.all():
             report.likes.remove(request.user)
             liked = False
         else:
             report.likes.add(request.user)
             liked = True
-            
         return JsonResponse({'liked': liked, 'count': report.likes.count()})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
@@ -167,13 +162,7 @@ def add_comment(request, pk):
     if request.method == 'POST':
         data = json.loads(request.body)
         report = get_object_or_404(Report, pk=pk)
-        
-        comment = Comment.objects.create(
-            report=report,
-            author=request.user,
-            text=data.get('text')
-        )
-        
+        comment = Comment.objects.create(report=report, author=request.user, text=data.get('text'))
         return JsonResponse({
             'status': 'success',
             'comment_id': comment.id,
@@ -188,34 +177,11 @@ def delete_comment(request, comment_id):
     if request.method == 'POST':
         comment = get_object_or_404(Comment, id=comment_id)
         report_id = comment.report.id
-        
         if request.user == comment.author or request.user.is_staff:
             comment.delete()
             remaining_count = Comment.objects.filter(report_id=report_id).count()
             return JsonResponse({'status': 'success', 'count': remaining_count})
-            
         return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
-    return JsonResponse({'status': 'error'}, status=400)
-
-@login_required
-def book_room(request, hotel_id):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        hotel = get_object_or_404(Hotel, id=hotel_id)
-
-        if hotel.available_rooms > 0:
-            RoomBooking.objects.create(
-                user=request.user,
-                hotel=hotel,
-                check_in_date=data.get('check_in'),
-                check_out_date=data.get('check_out')
-            )
-            hotel.available_rooms -= 1
-            hotel.save()
-            
-            return JsonResponse({'status': 'success', 'rooms_left': hotel.available_rooms})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Sorry, this hotel is fully booked!'})
     return JsonResponse({'status': 'error'}, status=400)
 
 @login_required
@@ -227,23 +193,12 @@ def analytics_dashboard(request):
     spot_names = [spot.title for spot in top_spots]
     spot_engagement = [spot.total_engagement for spot in top_spots]
 
-    hotels = Hotel.objects.all()
-    hotel_names = [hotel.name for hotel in hotels]
-    hotel_rooms = [hotel.available_rooms for hotel in hotels]
-
     context = {
         'spot_names': json.dumps(spot_names),
         'spot_engagement': json.dumps(spot_engagement),
-        'hotel_names': json.dumps(hotel_names),
-        'hotel_rooms': json.dumps(hotel_rooms),
     }
-    
     return render(request, 'reports/analytics.html', context)
 
-
-# ==========================================
-# SECURE AI CHATBOT BACKEND
-# ==========================================
 def chat_api(request):
     if request.method == 'POST':
         try:
@@ -259,7 +214,6 @@ def chat_api(request):
                 'X-Title': 'GeoPH'
             }
             
-            # Using the 100% free Meta Llama 3 model
             payload = {
                 "model": "meta-llama/llama-3.1-8b-instruct:free",
                 "messages": [
@@ -269,7 +223,6 @@ def chat_api(request):
             }
 
             req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-            
             with urllib.request.urlopen(req) as response:
                 response_data = json.loads(response.read().decode('utf-8'))
                 bot_message = response_data['choices'][0]['message']['content']

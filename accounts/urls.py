@@ -13,7 +13,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('report/<int:pk>/comment/', views.add_comment, name='add_comment'),
-    path('book/<int:hotel_id>/', views.book_room, name='book_room'), 
     path('like/<int:pk>/', views.toggle_like, name='toggle_like'),
     path('reports/', views.report_list, name='report_list'),
     path('reports/new/', views.report_create, name='report_create'),
