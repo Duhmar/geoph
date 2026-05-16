@@ -91,7 +91,7 @@
             .glass-dropdown { right: 10px; width: 200px; }
             .widget-header h4 { font-size: 1rem; }
         }
-        
+
     </style>
 </head>
 <body>
@@ -248,7 +248,6 @@
 
         function handleEnter(event) { if (event.key === 'Enter') sendMessage(); }
         
-        // 100% GUARANTEED FETCH LOGIC
         function sendMessage() {
             const inputField = document.getElementById('chatInput');
             const messageText = inputField.value.trim();
@@ -269,21 +268,28 @@
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            fetch('/chat/', {
+            // FIX: Use Django's template tag to dynamically grab the absolutely correct URL
+            fetch("{% url 'chat_api' %}", {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' }, // CSRF removed thanks to backend decorator
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ "message": messageText })
             })
             .then(async response => {
                 const text = await response.text();
+                let data;
+                
+                // FIX: Stop the try/catch block from swallowing the real AI errors
                 try {
-                    const data = JSON.parse(text);
-                    if (!response.ok) throw new Error(data.error || `HTTP Error ${response.status}`);
-                    return data;
+                    data = JSON.parse(text);
                 } catch (e) {
-                    // If Django throws a 500/403 HTML page, this will catch it instead of hiding it!
-                    throw new Error(response.ok ? "Invalid JSON from server" : `Django Server Code: ${response.status}`);
+                    throw new Error(`Django Route Error (Code ${response.status}). The app is stuck on an old cache.`);
                 }
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `Backend Error: ${response.status}`);
+                }
+                
+                return data;
             })
             .then(data => {
                 document.getElementById('typingIndicator').remove();
@@ -297,7 +303,8 @@
                 document.getElementById('typingIndicator').remove();
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'message msg-bot';
-                errorDiv.textContent = "Error: " + error.message; // Prints EXACTLY why it failed!
+                // This will now print the EXACT error text from Python or OpenRouter!
+                errorDiv.textContent = "Error: " + error.message; 
                 chatMessages.appendChild(errorDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
