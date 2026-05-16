@@ -9,8 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')), 
     path('accounts/', include('django.contrib.auth.urls')), 
-    
     path('', views.home, name='home'), 
+    path('chat/', views.chat_api, name='chat_api'),
     path('report/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     path('like/<int:pk>/', views.toggle_like, name='toggle_like'), 
