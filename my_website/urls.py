@@ -14,7 +14,6 @@ urlpatterns = [
     path('report/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     path('like/<int:pk>/', views.toggle_like, name='toggle_like'), 
-    path('book/<int:hotel_id>/', views.book_room, name='book_room'),
 ]
 
 if settings.DEBUG:
