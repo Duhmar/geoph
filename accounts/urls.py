@@ -22,5 +22,6 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('profile/password/', views.change_password, name='change_password'),
     path('analytics/', views.analytics_dashboard, name='analytics_dashboard'),
-    path('service-worker.js', TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript'), name='service-worker.js'),
+    path('service-worker.js', TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript'), name='service-worker'),
+    path('manifest.json', TemplateView.as_view(template_name="manifest.json", content_type='application/json'), name='manifest'),
 ]

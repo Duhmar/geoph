@@ -1,0 +1,16 @@
+{
+  "name": "GeoPH Travel Guide",
+  "short_name": "GeoPH",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1e2f",
+  "theme_color": "#ffeb3b",
+  "description": "Offline-ready Ecological and Tourism Mapping for the Philippines.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3180/3180118.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
